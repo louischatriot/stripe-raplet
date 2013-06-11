@@ -31,7 +31,15 @@ expressServer.use(expressServer.router);
  * Routes
  */
 expressServer.get('/', function (req, res, next) {
-  res.send(200, 'TEST');
+  var response = {};
+
+  console.log("===========");
+  console.log(req.query);
+
+  response.status = 200;
+  response.html = "<b>TEST</b>";
+
+  res.send(200, req.query.callback + '(' +  JSON.stringify(response) + ')');
 });
 
 
