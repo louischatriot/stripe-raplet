@@ -34,8 +34,6 @@ module.exports = function (req, res, next) {
 
   if (!req.query.email) { return answerRapportive(req, { status: 400, html: '' }); }
 
-  console.log("==1");
-
   stripe.getCustomerIdFromEmail(req.query.email, function (err, id) {
     if (err) {
       if (err.customerNotFound) {
@@ -44,7 +42,6 @@ module.exports = function (req, res, next) {
         return answerRapportive(req, { status: 500, html: '' });
       }
     }
-  console.log("==2");
 
     async.parallel({
       customer: async.apply(stripe.getCustomer, id)
@@ -58,7 +55,6 @@ module.exports = function (req, res, next) {
         ;
 
       if (err) { return answerRapportive(req, { status: 500, html: '' }); }
-  console.log("==3");
 
       // Total amount charged and refunded
       data.totalCharged = sumField(data.charges, 'amount') / 100;
@@ -109,12 +105,15 @@ module.exports = function (req, res, next) {
       max = max * (1 + Math.floor(data.bestPeriod / max));
 
       graphData = _.map(graphData, function (i, k) {
-        var w = 100 / (2 * graphData.length + 1);
+        var w = 100 / (2 * graphData.length + 1)
+          , weekNumber = graphData.length - k - 1;
         return { net_amount: i
                , height: graphHeight * i / max
                , top: graphHeight * (1 - (i / max))
                , width: w
                , left: w * (2 * k + 1)
+               , title: moment().subtract('days', 6 + weekNumber * 7).format('MMM Do') + "-" +
+                        moment().subtract('days', weekNumber * 7).format('MMM Do') + ": $" + _s.numberFormat(i / 100, 0)
                };
       });
 
