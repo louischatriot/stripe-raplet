@@ -21,7 +21,11 @@
   },
   "dependencies": {
     "express": "~3.2.6",
-    "h4e": "~0.3.0"
+    "h4e": "~0.3.0",
+    "request": "~2.21.0",
+    "nedb": "~0.7.3",
+    "async": "~0.2.9",
+    "underscore": "~1.4.4"
   },
   "devDependencies": {
     "chai": "1.0.x",
