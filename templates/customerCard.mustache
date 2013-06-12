@@ -1,3 +1,16 @@
-<img src="https://stripe.com/img/logo.png"><br>
-Customer since {{createdFromNow}}<br>
+<img src="https://stripe.com/img/logo.png" style="margin-top: 5px; width: 40px; height: auto;"><br>
+Customer since {{createdFromNow}}<br><br>
 
+Total payments: ${{totalCharged}}<br>
+<em>{{#totalRefunded}}Of which refunded: ${{totalRefunded}}{{/totalRefunded}}</em><br>
+{{#relevantPeriodName}}
+  {{relevantPeriodName}} net average: ${{netAveragePerPeriod}}
+{{/relevantPeriodName}}
+<br><br>
+Evolution of payments:<br>
+
+<div style="position: relative; height: {{graphHeight}}px; border-width: 1px; border-color: #999; border-left-style: solid; border-bottom-style: solid; margin-top: 5px; margin-bottom: 5px;">
+  {{#graphData}}
+    <div style="position: absolute; background-color: steelblue; width: {{width}}%; height: {{height}}px; left: {{left}}%; top: {{top}}px;"></div>
+  {{/graphData}}
+</div>
