@@ -54,15 +54,16 @@ module.exports = function (req, res, next) {
         , relevantPeriod   // In what period does it make sense to give the average spend per interval? Can be week or month, no less (in that case we won't show periodic data)
         , numberPeriods
         , graphHeight = 50
-        , graphData = [], i, j, bestPeriod
+        , graphData = [], i, max
         ;
 
       if (err) { return answerRapportive(req, { status: 500, html: '' }); }
   console.log("==3");
 
       // Total amount charged and refunded
-      data.totalRefunded = sumField(data.charges, 'amount_refunded') / 100;
       data.totalCharged = sumField(data.charges, 'amount') / 100;
+      data.totalRefunded = sumField(data.charges, 'amount_refunded') / 100;
+      data.totalNet = data.totalCharged - data.totalRefunded;
 
       // Creation date and relevant period
       created = new Date(data.customer.created * 1000);
@@ -70,10 +71,12 @@ module.exports = function (req, res, next) {
 
       if (Date.now() - created.getTime() > 10 * 7 * 24 * 3600 * 1000) {   // 10 weeks
         relevantPeriod = 365 * 24 * 3600 * 1000 / 12;
-        values.relevantPeriodName = 'Monthly';
+        values.relevantPeriodNameLy = 'Monthly';
+        values.relevantPeriodName = 'month';   // I really need to switch from mustache to something a bit more powerful!
       } else if (Date.now() - created.getTime() > 7 * 24 * 3600 * 1000) {   // 1 week
         relevantPeriod = 7 * 24 * 3600 * 1000;
-        values.relevantPeriodName = 'Weekly';
+        values.relevantPeriodNameLy = 'Weekly';
+        values.relevantPeriodName = 'week';
       }
 
       // Net average periodic spend
@@ -99,25 +102,37 @@ module.exports = function (req, res, next) {
         }
       }
 
-      bestPeriod = _.max(graphData);
+      // Use the closest human-readable number greater than max
+      data.bestPeriod = _.max(graphData);
+      max = Math.floor(Math.log(data.bestPeriod) / Math.log(10));
+      max = 5 * Math.pow(10, max - 1);
+      max = max * (1 + Math.floor(data.bestPeriod / max));
+
       graphData = _.map(graphData, function (i, k) {
         var w = 100 / (2 * graphData.length + 1);
         return { net_amount: i
-               , height: graphHeight * i / bestPeriod
-               , top: graphHeight * (1 - (i / bestPeriod))
+               , height: graphHeight * i / max
+               , top: graphHeight * (1 - (i / max))
                , width: w
                , left: w * (2 * k + 1)
                };
       });
 
+      data.averageLineHeight = graphHeight * (1 - data.netAveragePerPeriod * 100 / max);
 
-      console.log(graphData);
+      data.max = max / 100;   // Display dollars, not cents
 
       values.graphHeight = graphHeight;
       values.graphData = graphData;
 
       // Format numbers
-      ['totalRefunded', 'totalCharged', 'netAveragePerPeriod'].forEach(function (n) {
+      [ 'totalRefunded'
+      , 'totalCharged'
+      , 'totalNet'
+      , 'netAveragePerPeriod'
+      , 'bestPeriod'
+      , 'averageLineHeight'
+      , 'max'].forEach(function (n) {
         values[n] = _s.numberFormat(data[n], 0);
       });
 
@@ -127,3 +142,6 @@ module.exports = function (req, res, next) {
     });
   });
 };
+
+
+
