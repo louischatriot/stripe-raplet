@@ -1,0 +1,12 @@
+// Trigger details boxes to appear/disappear
+$('.detailsLink').bind('click', function (e) {
+  var $paymentsDetails = $(e.currentTarget).parent().find('blockquote');
+
+  if ($paymentsDetails.css('display') === 'none') {
+    $paymentsDetails.css('display', 'block');
+  } else {
+    $paymentsDetails.css('display', 'none');
+  }
+
+  e.preventDefault();
+});

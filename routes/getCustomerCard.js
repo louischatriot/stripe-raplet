@@ -52,14 +52,10 @@ module.exports = function (req, res, next) {
         , numberPeriods
         , graphHeight = 50
         , graphData = [], i, max
+        , subscription = data.customer.subscription
         ;
 
       if (err) { return answerRapportive(req, { status: 500, html: '' }); }
-
-      // Total amount charged and refunded
-      data.totalCharged = sumField(data.charges, 'amount') / 100;
-      data.totalRefunded = sumField(data.charges, 'amount_refunded') / 100;
-      data.totalNet = data.totalCharged - data.totalRefunded;
 
       // Creation date and relevant period
       created = new Date(data.customer.created * 1000);
@@ -75,10 +71,32 @@ module.exports = function (req, res, next) {
         values.relevantPeriodName = 'week';
       }
 
+      // Total amount charged and refunded
+      data.totalCharged = sumField(data.charges, 'amount') / 100;
+      data.totalRefunded = sumField(data.charges, 'amount_refunded') / 100;
+      data.totalNet = data.totalCharged - data.totalRefunded;
+
       // Net average periodic spend
       if (relevantPeriod) {
         numberPeriods = (Date.now() - created.getTime()) / relevantPeriod;
-        data.netAveragePerPeriod = (data.totalCharged - data.totalRefunded) / numberPeriods;
+        data.netAveragePerPeriod = data.totalNet / numberPeriods;
+        data.chargedAveragePerPeriod = data.totalCharged / numberPeriods;
+        data.refundedAveragePerPeriod = data.totalRefunded / numberPeriods;
+      }
+
+      // Subscription, if any
+      if (subscription && subscription.status === 'active') {
+        values.subscription = "Subscribed to " + subscription.plan.name;
+        values.subscription += " ($" + _s.numberFormat(subscription.plan.amount / 100);
+        values.subscription += " every ";
+
+        if (subscription.plan.interval_count === 1) {
+          values.subscription += subscription.plan.interval + ")";
+        } else {
+          values.subscription += subscription.plan.interval_count + " " + subscription.plan.interval + "s)";
+        }
+      } else {
+        values.subscription = "No active subscription";
       }
 
       // Periodic spend graph
@@ -125,14 +143,10 @@ module.exports = function (req, res, next) {
       values.graphData = graphData;
 
       // Format numbers
-      [ 'totalRefunded'
-      , 'totalCharged'
-      , 'totalNet'
-      , 'netAveragePerPeriod'
-      , 'bestPeriod'
-      , 'averageLineHeight'
-      , 'max'].forEach(function (n) {
-        values[n] = _s.numberFormat(data[n], 0);
+      Object.keys(data).forEach(function (k) {
+        if (typeof data[k] === 'number') {
+          values[k] = _s.numberFormat(data[k], 0);
+        }
       });
 
       response.status = 200;

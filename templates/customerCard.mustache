@@ -1,17 +1,30 @@
 <img src="https://stripe.com/img/logo.png" id="stripeLogo"><br>
-Customer since {{createdFromNow}}<br><br>
+Customer since {{createdFromNow}}<br>
 
-Total net payments: ${{totalNet}}<br>
-<blockquote class="paymentsDetails">
-Salut<br>
-caca
-</blockquote>
+<ul id="mainItems">
+<li>
+  <a href="#" class="detailsLink">Total net payments: ${{totalNet}}</a>
+  <blockquote style="display: none;" class="paymentsDetails">
+    Payments: ${{totalCharged}}<br>
+    Refunds: ${{totalRefunded}}
+  </blockquote>
+</li>
 
 
 {{#relevantPeriodNameLy}}
-  {{relevantPeriodNameLy}} average: ${{netAveragePerPeriod}}
+<li>
+  <a href="#" class="detailsLink">{{relevantPeriodNameLy}} average: ${{netAveragePerPeriod}}</a>
+  <blockquote style="display: none;" class="paymentsDetails">
+  Payments: ${{chargedAveragePerPeriod}}<br>
+  Refunds: ${{refundedAveragePerPeriod}}
+  </blockquote>
+</li>
 {{/relevantPeriodNameLy}}
-<br><br>
+
+<li>{{subscription}}</li>
+</ul>
+
+<br>
 {{#relevantPeriodName}}
   Evolution {{relevantPeriodName}} over {{relevantPeriodName}}:<br>
 
