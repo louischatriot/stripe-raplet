@@ -28,7 +28,7 @@ Customer since {{createdFromNow}}<br>
 {{#relevantPeriodName}}
   Evolution {{relevantPeriodName}} over {{relevantPeriodName}}:<br>
 
-  <div class="graph" style="height: {{graphHeight}}px;">
+  <div class="graph" style="height: {{graphHeight}}px; width: {{graphWidth}}%;">
     {{#graphData}}
       <div class="graphBar" title="{{title}}" style="width: {{width}}%; height: {{height}}px; left: {{left}}%; top: {{top}}px;"></div>
     {{/graphData}}
@@ -38,6 +38,8 @@ Customer since {{createdFromNow}}<br>
     <div class="yAxisLabel">${{max}}</div>
 
     <!-- Average line -->
-    <div class="averageLine" style="top: {{averageLineHeight}}px;"></div>
+    <div class="averageLine" style="top: {{averageLineHeight}}px;">
+      <div class="averageLineTitle">Average<br> ${{netAveragePerPeriod}}</div>
+    </div>
   </div>
 {{/relevantPeriodName}}

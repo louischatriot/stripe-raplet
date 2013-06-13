@@ -50,7 +50,8 @@ module.exports = function (req, res, next) {
       var created
         , relevantPeriod   // In what period does it make sense to give the average spend per interval? Can be week or month, no less (in that case we won't show periodic data)
         , numberPeriods
-        , graphHeight = 50
+        , graphHeight = 50   // In pixels
+        , graphWidth = 70    // Over 100
         , graphData = [], i, max
         , subscription = data.customer.subscription
         ;
@@ -140,6 +141,7 @@ module.exports = function (req, res, next) {
       data.max = max / 100;   // Display dollars, not cents
 
       values.graphHeight = graphHeight;
+      values.graphWidth = graphWidth;
       values.graphData = graphData;
 
       // Format numbers
