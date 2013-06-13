@@ -1,7 +1,9 @@
 stripe-raplet
 =============
 
-A rapportive raplet showing your customers' payment data in GMail: net total payments, weekly/monthly average and a week over week or month over month graph.
+A rapportive raplet showing your customers' payment data in GMail: net total payments, weekly/monthly average and a week over week or month over month graph. Here is a screenshot of how my Rapportive looks with it (my customer's Stripe data is on the bottom right):
+
+<img src="http://i.imgur.com/HEguAH4.png" alt="Stripe raplet">
 
 For now this is just a demo that needs a lot of setup to work. The goal is to provide this as a service. If you still want to use it on your own:  
 
