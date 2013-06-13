@@ -1,22 +1,30 @@
-<img src="https://stripe.com/img/logo.png" style="margin-top: 5px; width: 40px; height: auto;"><br>
+<img src="https://stripe.com/img/logo.png" id="stripeLogo"><br>
 Customer since {{createdFromNow}}<br><br>
 
 Total net payments: ${{totalNet}}<br>
+<blockquote class="paymentsDetails">
+Salut<br>
+caca
+</blockquote>
+
+
 {{#relevantPeriodNameLy}}
   {{relevantPeriodNameLy}} average: ${{netAveragePerPeriod}}
 {{/relevantPeriodNameLy}}
 <br><br>
-Evolution {{relevantPeriodName}} over {{relevantPeriodName}}:<br>
+{{#relevantPeriodName}}
+  Evolution {{relevantPeriodName}} over {{relevantPeriodName}}:<br>
 
-<div style="position: relative; height: {{graphHeight}}px; border-width: 1px; border-color: #999; border-left-style: solid; border-bottom-style: solid; margin-top: 8px; margin-bottom: 5px;">
-  {{#graphData}}
-    <div class="graphBar" title="{{title}}" style="position: absolute; background-color: steelblue; width: {{width}}%; height: {{height}}px; left: {{left}}%; top: {{top}}px;"></div>
-  {{/graphData}}
+  <div class="graph" style="height: {{graphHeight}}px;">
+    {{#graphData}}
+      <div class="graphBar" title="{{title}}" style="width: {{width}}%; height: {{height}}px; left: {{left}}%; top: {{top}}px;"></div>
+    {{/graphData}}
 
-  <!-- Y-axis scale and tick mark -->
-  <div style="position: absolute; width:3px; height: 1px; background-color: #999;"></div>
-  <div style="position: absolute; left: 5px; top: -5px; font-size: 10px; color: #777;">${{max}}</div>
+    <!-- Y-axis scale and tick mark -->
+    <div class="yAxisTick"></div>
+    <div class="yAxisLabel">${{max}}</div>
 
-  <!-- Average line -->
-  <div style="position: absolute; width:100%; height: 1px; background-color: #f44; top: {{averageLineHeight}}px;"></div>
-</div>
+    <!-- Average line -->
+    <div class="averageLine" style="top: {{averageLineHeight}}px;"></div>
+  </div>
+{{/relevantPeriodName}}

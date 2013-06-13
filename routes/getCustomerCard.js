@@ -137,6 +137,8 @@ module.exports = function (req, res, next) {
 
       response.status = 200;
       response.html = h4e.render('customerCard', { values: values });
+      response.js = h4e.render('customerCardJs');
+      response.css = h4e.render('customerCardCss');
       return answerRapportive(req, response);
     });
   });
