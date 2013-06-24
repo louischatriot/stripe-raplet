@@ -108,13 +108,11 @@ module.exports = function (req, res, next) {
 
       // For demo purposes, and since I can't change the creation date of a charge
       // I will spread the spends over time. This is of course completely arbitrary
-      for (i = 0; i < graphData.length; i += 1) {
-        if (i >= 3) {
-          graphData[i - 3] = 0.05 * graphData[i];
-          graphData[i - 2] = 0.25 * graphData[i];
-          graphData[i - 1] = 0.3 * graphData[i];
-          graphData[i] = 0.4 * graphData[i];
-        }
+      for (i = graphData.length - 1; i >= 3; i += 1) {
+        graphData[i - 3] = 0.05 * graphData[i];
+        graphData[i - 2] = 0.25 * graphData[i];
+        graphData[i - 1] = 0.3 * graphData[i];
+        graphData[i] = 0.4 * graphData[i];
       }
 
       // Use the closest human-readable number greater than max
